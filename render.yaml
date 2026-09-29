@@ -1,0 +1,127 @@
+services:
+  - type: web
+    name: geasto-minio
+    runtime: image
+    image:
+      url: docker.io/minio/minio:latest
+    dockerCommand: server /data --address ":10000" --console-address ":10001"
+    region: frankfurt
+    plan: 0.5c-512mb
+    healthCheckPath: /minio/health/ready
+    disk:
+      name: minio-data
+      mountPath: /data
+      sizeGB: 10
+    envVars:
+      - key: MINIO_ROOT_USER
+        sync: false
+      - key: MINIO_ROOT_PASSWORD
+        generateValue: true
+
+  - type: web
+    name: geasto-app
+    runtime: docker
+    dockerfilePath: ./modular_monolith/Dockerfile
+    dockerContext: .
+    region: frankfurt
+    plan: 0.5c-512mb
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: geasto-postgres
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: geasto-postgres
+          property: port
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: geasto-postgres
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: geasto-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: geasto-postgres
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PASSWORD_PEPPER
+        generateValue: true
+      - key: MINIO_INTERNAL_ENDPOINT
+        fromService:
+          name: geasto-minio
+          type: web
+          property: hostport
+      - key: MINIO_INTERNAL_SECURE
+        value: "false"
+      - key: MINIO_PUBLIC_ENDPOINT
+        fromService:
+          name: geasto-minio
+          type: web
+          envVarKey: RENDER_EXTERNAL_HOSTNAME
+      - key: MINIO_PUBLIC_SECURE
+        value: "true"
+      - key: MINIO_ROOT_USER
+        fromService:
+          name: geasto-minio
+          type: web
+          envVarKey: MINIO_ROOT_USER
+      - key: MINIO_ROOT_PASSWORD
+        fromService:
+          name: geasto-minio
+          type: web
+          envVarKey: MINIO_ROOT_PASSWORD
+
+  - type: web
+    name: geasto-whatsapp
+    runtime: docker
+    dockerfilePath: ./whatsapp-service/Dockerfile.node
+    dockerContext: .
+    region: frankfurt
+    plan: 0.5c-512mb
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: geasto-postgres
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: geasto-postgres
+          property: port
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: geasto-postgres
+          property: database
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: geasto-postgres
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: geasto-postgres
+          property: password
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      - key: WHATSAPP_APP_SECRET
+        sync: false
+
+databases:
+  - name: geasto-postgres
+    databaseName: crm
+    user: crm_user
+    region: frankfurt
+    plan: 0.1c-256mb
+    ipAllowList: []

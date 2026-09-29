@@ -12,7 +12,7 @@ def get_minio_client() -> Minio:
         os.environ.get("MINIO_INTERNAL_ENDPOINT", "minio:9000"),
         access_key=os.environ["MINIO_ROOT_USER"],
         secret_key=os.environ["MINIO_ROOT_PASSWORD"],
-        secure=False,
+        secure=os.environ.get("MINIO_INTERNAL_SECURE", "false").lower() == "true",
     )
 
 

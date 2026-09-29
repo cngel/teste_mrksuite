@@ -1,11 +1,16 @@
 require("dotenv").config();
+const { createHmac, timingSafeEqual } = require("crypto");
 const express = require("express");
 const { Pool } = require("pg");
 
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({
+    verify: (req, res, buffer) => {
+        req.rawBody = Buffer.from(buffer);
+    }
+}));
 
 const db = new Pool({
     host: process.env.POSTGRES_HOST || "localhost",
@@ -59,6 +64,16 @@ function formatarContactos(contactos) {
     return `Contactos do CRM (até 20 mais recentes):\n${linhas.join("\n")}`;
 }
 
+function validarAssinatura(req) {
+    const segredo = process.env.WHATSAPP_APP_SECRET;
+    const assinatura = req.get("x-hub-signature-256");
+    if (!segredo || !assinatura?.startsWith("sha256=") || !req.rawBody) return false;
+
+    const esperada = Buffer.from(`sha256=${createHmac("sha256", segredo).update(req.rawBody).digest("hex")}`);
+    const recebida = Buffer.from(assinatura);
+    return recebida.length === esperada.length && timingSafeEqual(recebida, esperada);
+}
+
 async function enviarMensagem(numero, mensagem) {
     const resposta = await fetch(
         `https://graph.facebook.com/v25.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
@@ -83,6 +98,8 @@ async function enviarMensagem(numero, mensagem) {
 }
 
 // Verificação da Meta
+app.get("/health", (req, res) => res.status(200).send("ok"));
+
 app.get("/webhook/whatsapp", (req, res) => {
     const mode = req.query["hub.mode"];
     const token = req.query["hub.verify_token"];
@@ -90,24 +107,17 @@ app.get("/webhook/whatsapp", (req, res) => {
 
     const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
 
-    console.log("=== VERIFICAÇÃO DO WEBHOOK ===");
-    console.log("Mode:", mode);
-    console.log("Token recebido:", token);
-    console.log("Token configurado:", VERIFY_TOKEN);
-    console.log("Challenge:", challenge);
-
     if (mode === "subscribe" && token === VERIFY_TOKEN) {
-        console.log("Webhook verificado!");
         return res.status(200).send(challenge);
     }
-
-    console.log("Token inválido ou parâmetros incorretos");
 
     return res.sendStatus(403);
 });
 
 // Eventos recebidos
 app.post("/webhook/whatsapp", (req, res) => {
+    if (!validarAssinatura(req)) return res.sendStatus(401);
+
     console.log("Webhook recebido:");
     console.log(JSON.stringify(req.body, null, 2));
 

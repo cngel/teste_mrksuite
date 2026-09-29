@@ -10,5 +10,5 @@ COPY documents-service ./documents-service
 COPY accounting-service ./accounting-service
 COPY stock-service ./stock-service
 COPY web-service ./web-service
-EXPOSE 5002
-CMD ["uvicorn", "modular_monolith.app:app", "--host", "0.0.0.0", "--port", "5002"]
+EXPOSE 10000
+CMD ["sh", "-c", "uvicorn modular_monolith.app:app --host 0.0.0.0 --port ${PORT:-5002}"]

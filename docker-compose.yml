@@ -58,6 +58,8 @@ services:
     container_name: ms_app
     restart: unless-stopped
     env_file: .env
+    environment:
+      PORT: "5002"
     ports:
       - "127.0.0.1:5002:5002"
     depends_on:
