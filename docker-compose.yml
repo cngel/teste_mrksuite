@@ -74,24 +74,6 @@ services:
         aliases:
           - web-service
 
-  whatsapp-webhook:
-    build:
-      context: .
-      dockerfile: whatsapp-service/Dockerfile.node
-    container_name: ms_whatsapp_webhook
-    restart: unless-stopped
-    env_file: .env
-    environment:
-      POSTGRES_HOST: postgres
-      PORT: "3000"
-    ports:
-      - "127.0.0.1:3000:3000"
-    networks:
-      - ms_network
-    depends_on:
-      postgres:
-        condition: service_healthy
-
   # Serviços internos mapeados localmente para o Nginx via 127.0.0.1.
   # Não são alcançáveis diretamente a partir do host externo (Internet).
   auth-service:

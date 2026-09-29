@@ -77,38 +77,6 @@ services:
           name: geasto-minio
           type: web
           envVarKey: MINIO_ROOT_PASSWORD
-
-  - type: web
-    name: geasto-whatsapp
-    runtime: docker
-    dockerfilePath: ./whatsapp-service/Dockerfile.node
-    dockerContext: .
-    region: frankfurt
-    plan: 0.5c-512mb
-    healthCheckPath: /health
-    envVars:
-      - key: PORT
-        value: "10000"
-      - key: POSTGRES_HOST
-        fromDatabase:
-          name: geasto-postgres
-          property: host
-      - key: POSTGRES_PORT
-        fromDatabase:
-          name: geasto-postgres
-          property: port
-      - key: POSTGRES_DB
-        fromDatabase:
-          name: geasto-postgres
-          property: database
-      - key: POSTGRES_USER
-        fromDatabase:
-          name: geasto-postgres
-          property: user
-      - key: POSTGRES_PASSWORD
-        fromDatabase:
-          name: geasto-postgres
-          property: password
       - key: WHATSAPP_PHONE_NUMBER_ID
         sync: false
       - key: WHATSAPP_ACCESS_TOKEN

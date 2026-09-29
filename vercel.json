@@ -1,0 +1,65 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "geasto-whatsapp": {
+      "root": ".",
+      "framework": "express"
+    },
+    "accounting-service": {
+      "root": "accounting-service",
+      "framework": "fastapi"
+    },
+    "auth-service": {
+      "root": "auth-service",
+      "framework": "fastapi"
+    },
+    "crm-service": {
+      "root": "crm-service",
+      "framework": "fastapi"
+    },
+    "documents-service": {
+      "root": "documents-service",
+      "framework": "fastapi"
+    },
+    "erp-agent": {
+      "root": "erp-agent",
+      "framework": "fastapi"
+    },
+    "finance-service": {
+      "root": "finance-service",
+      "framework": "fastapi"
+    },
+    "modular_monolith": {
+      "root": "modular_monolith",
+      "framework": "fastapi"
+    },
+    "projects-service": {
+      "root": "projects-service",
+      "framework": "fastapi"
+    },
+    "rh-service": {
+      "root": "rh-service",
+      "framework": "fastapi"
+    },
+    "stock-service": {
+      "root": "stock-service",
+      "framework": "fastapi"
+    },
+    "web-service": {
+      "root": "web-service",
+      "framework": "fastapi"
+    },
+    "whatsapp-service": {
+      "root": "whatsapp-service",
+      "framework": "fastapi"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "geasto-whatsapp"
+      }
+    }
+  ]
+}
