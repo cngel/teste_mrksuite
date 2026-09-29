@@ -1,0 +1,210 @@
+# Stack dedicado a CI/CD e validação autónoma — separado do
+# docker-compose.yml de desenvolvimento:
+#   - usa .env.ci (valores fictícios, seguro para commitar), nunca .env real
+#   - não publica portas no host, para não colidir com um stack de dev já
+#     a correr na mesma máquina — tudo se valida de dentro da rede ci_network
+#     (ver scripts/ci_smoke_test.sh, correndo através do serviço "validator")
+#   - dados efémeros (tmpfs), pensado para subir, validar e deitar abaixo
+#
+# Uso: `make ci` (ver Makefile) ou diretamente:
+#   docker compose -f docker-compose.ci.yml --env-file .env.ci up -d --build
+#   docker compose -f docker-compose.ci.yml --env-file .env.ci run --rm validator
+#   docker compose -f docker-compose.ci.yml --env-file .env.ci down -v
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    tmpfs:
+      - /var/lib/postgresql/data
+    networks:
+      - ci_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  minio:
+    image: minio/minio:latest
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    tmpfs:
+      - /data
+    networks:
+      - ci_network
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    networks:
+      - ci_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  modular-monolith:
+    build:
+      context: .
+      dockerfile: modular_monolith/Dockerfile
+    env_file: .env.ci
+    networks:
+      - ci_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  auth-service:
+    build: ./auth-service
+    profiles: ["microservices"]
+    env_file: .env.ci
+    networks:
+      - ci_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  crm-service:
+    build: ./crm-service
+    profiles: ["microservices"]
+    env_file: .env.ci
+    networks:
+      - ci_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  rh-service:
+    build: ./rh-service
+    profiles: ["microservices"]
+    env_file: .env.ci
+    networks:
+      - ci_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+#  finance-service:
+#    build: ./finance-service
+#    env_file: .env.ci
+#    networks:
+#      - ci_network
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+
+#  projects-service:
+#    build: ./projects-service
+#    env_file: .env.ci
+#    networks:
+#      - ci_network
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      minio:
+#        condition: service_healthy
+
+  documents-service:
+    build: ./documents-service
+    profiles: ["microservices"]
+    env_file: .env.ci
+    networks:
+      - ci_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  accounting-service:
+    build: ./accounting-service
+    profiles: ["microservices"]
+    env_file: .env.ci
+    networks:
+      - ci_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  stock-service:
+    build: ./stock-service
+    profiles: ["microservices"]
+    env_file: .env.ci
+    networks:
+      - ci_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  web-service:
+    build: ./web-service
+    profiles: ["microservices"]
+    env_file: .env.ci
+    networks:
+      - ci_network
+    depends_on:
+      - auth-service
+      - crm-service
+      - rh-service
+      #- finance-service
+      #- projects-service
+      - documents-service
+      - accounting-service
+      - stock-service
+
+#  erp-agent:
+#    build: ./erp-agent
+#    env_file: .env.ci
+#    environment:
+#      WEB_SERVICE_URL: http://web-service:5002
+#      TASKS_DB_PATH: /app/data/tasks.db
+#    tmpfs:
+#      - /app/data
+#    networks:
+#      - ci_network
+#    depends_on:
+#      - web-service
+
+  # Container "autónomo" que corre dentro da ci_network para validar que
+  # todos os serviços arrancaram bem (ver scripts/ci_smoke_test.sh). Não
+  # sobe com `up`; só é invocado com `run --rm validator` (ver Makefile).
+  validator:
+    image: curlimages/curl:8.11.0
+    networks:
+      - ci_network
+    entrypoint: ["sh", "/scripts/ci_smoke_test.sh"]
+    volumes:
+      - ./scripts/ci_smoke_test.sh:/scripts/ci_smoke_test.sh:ro
+    profiles:
+      - tools
+
+networks:
+  ci_network:
+    driver: bridge

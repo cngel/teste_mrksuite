@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>(function(){try{var t=localStorage.getItem('mksTheme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+    <meta name="description" content="Crie a sua conta MarkSuite — 14 dias grátis, sem cartão de crédito.">
+    <title>Criar conta — MarkSuite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', path='estilos/login.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', path='imagens/logo.png') }}" type="image/x-icon">
+
+</head>
+<body class="auth-body">
+
+    <div class="auth-shell">
+
+        <aside class="auth-aside">
+            <span class="aside-glow" aria-hidden="true"></span>
+            <span class="aside-dots" aria-hidden="true"></span>
+
+            <a href="/" class="aside-logo">
+                <span class="logo-mark" aria-hidden="true">
+                    <svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="authLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#60A5FA"/>
+                                <stop offset="100%" stop-color="#1D4ED8"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="28" height="28" rx="7" fill="url(#authLogoGrad)"/>
+                        <path d="M14 6.5 L15.3 12.7 L21.5 14 L15.3 15.3 L14 21.5 L12.7 15.3 L6.5 14 L12.7 12.7 Z" fill="white"/>
+                    </svg>
+                </span>
+                <span>MarkSuite</span>
+            </a>
+
+            <div class="aside-content">
+                <h2 class="aside-title">14 dias grátis<br>para experimentar tudo.</h2>
+                <p class="aside-desc">Sem cartão de crédito. Implementação em 2 semanas. Suporte em português durante todo o processo.</p>
+
+                <ul class="aside-points">
+                    <li><span class="dot"></span>Acesso completo a 50+ módulos</li>
+                    <li><span class="dot"></span>Kora AI incluída desde o primeiro dia</li>
+                    <li><span class="dot"></span>Importação de dados sem custo</li>
+                    <li><span class="dot"></span>Cancele a qualquer momento</li>
+                </ul>
+            </div>
+
+            <p class="aside-foot">© <span class="year">2026</span> MarkSuite · Feito em Angola</p>
+        </aside>
+
+        <main class="auth-main">
+            <div class="auth-card">
+
+                <a href="/" class="auth-back">
+                    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8 L3 8 M7 4 L3 8 L7 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    <span>Voltar ao site</span>
+                </a>
+
+                <a href="/" class="auth-mobile-logo">
+                    <span class="logo-mark" aria-hidden="true">
+                        <svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="28" height="28" rx="7" fill="url(#authLogoGrad)"/>
+                            <path d="M14 6.5 L15.3 12.7 L21.5 14 L15.3 15.3 L14 21.5 L12.7 15.3 L6.5 14 L12.7 12.7 Z" fill="white"/>
+                        </svg>
+                    </span>
+                    <span>MarkSuite</span>
+                </a>
+
+                <header class="auth-head">
+                    <h1 class="auth-title">Criar a sua conta.</h1>
+                    <p class="auth-sub">Comece grátis. Cartão de crédito não é necessário.</p>
+                </header>
+
+                <form class="auth-form" id="registerForm" novalidate>
+
+                    <div class="field-row" style="--field-delay: 0.05s;">
+                        <div class="field">
+                            <label class="field-label" for="regName">Nome</label>
+                            <input class="input" type="text" id="regName" name="name"
+                                   placeholder="O seu nome" autocomplete="name" required>
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="regCompany">Empresa</label>
+                            <input class="input" type="text" id="regCompany" name="company"
+                                   placeholder="Nome da empresa" autocomplete="organization" required>
+                        </div>
+                    </div>
+
+                    <div class="field-row" style="--field-delay: 0.12s;">
+                        <div class="field">
+                            <label class="field-label" for="regEmail">Email</label>
+                            <input class="input" type="email" id="regEmail" name="email"
+                                   placeholder="nome@empresa.com" autocomplete="email" required>
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="regWhatsapp">WhatsApp</label>
+                            <input class="input" type="tel" id="regWhatsapp" name="whatsapp"
+                                   placeholder="+244 900 000 000" autocomplete="tel" required>
+                        </div>
+                    </div>
+
+                    <div class="field" style="--field-delay: 0.19s;">
+                        <label class="field-label" for="regPwd">Password</label>
+                        <div class="input-wrap">
+                            <input class="input input-with-toggle" type="password" id="regPwd" name="password"
+                                   placeholder="Mínimo 8 caracteres" autocomplete="new-password" required minlength="8">
+                            <button type="button" class="pwd-toggle" aria-label="Mostrar password">
+                                <svg class="eye-show" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path d="M1 10 C3 5, 6.5 3, 10 3 S17 5, 19 10 C17 15, 13.5 17, 10 17 S3 15, 1 10 Z" stroke="currentColor" stroke-width="1.4" fill="none"/>
+                                    <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.4" fill="none"/>
+                                </svg>
+                                <svg class="eye-hide" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path d="M1 10 C3 5, 6.5 3, 10 3 S17 5, 19 10 C17 15, 13.5 17, 10 17 S3 15, 1 10 Z" stroke="currentColor" stroke-width="1.4" fill="none"/>
+                                    <path d="M3 17 L17 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="pwd-strength" data-strength="0" aria-hidden="true">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                        <p class="pwd-strength-label" aria-live="polite">Use letras, números e um símbolo para uma password forte</p>
+                    </div>
+
+                    <div class="field" style="--field-delay: 0.26s;">
+                        <label class="check-line check-line--terms">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span class="check-box"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+                            <span>Aceito os <a href="#termos" class="link-small">Termos</a> e a <a href="#privacidade" class="link-small">Política de Privacidade</a></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark btn-block btn-lg" style="--field-delay: 0.33s; background-color: #06080F; color: #fff;padding: 10px 0px; border-radius: 30px;">
+                        <span class="btn-label">Criar conta</span>
+                        <span class="btn-spinner" aria-hidden="true"></span>
+                    </button>
+
+                </form>
+
+                <div class="divider" style="--field-delay: 0.4s;"><span>ou continuar com</span></div>
+
+                <button type="button" class="btn-social" style="--field-delay: 0.47s;">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span>Continuar com Google</span>
+                </button>
+
+                <p class="auth-switch">
+                    Já tem conta? <a href="/login">Entrar</a>
+                </p>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script src="{{ url_for('static', path='scripts/login.js') }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+# Variáveis de ambiente e segredos - NUNCA subir
+.env
+.env.*
+*.env
+!.env.example
+# .env.ci só tem valores fictícios para o stack de validação de CI
+# (docker-compose.ci.yml) — sem segredos reais, seguro para commitar.
+!.env.ci
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Ambientes virtuais
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# Pytest / cobertura
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Mypy / type checkers
+.mypy_cache/
+.dmypy.json
+
+# Docker volumes e dados persistidos
+data/
+volumes/
+postgres-data/
+minio-data/
+
+# Logs
+*.log
+logs/
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+#

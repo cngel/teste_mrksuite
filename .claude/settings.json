@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ' *)",
+      "Bash(python -c \"import ast; ast.parse\\(open\\('rh-service/app.py', encoding='utf-8'\\).read\\(\\)\\)\")",
+      "Bash(grep -n \"^/\\\\* ===\\\\|^\\(function\\\\|^}\\)\\(\\);\" \"c:\\\\Users\\\\MARKSELLER\\\\geasto_empresa\\\\web-service\\\\static\\\\scripts\\\\dashboard.js\")",
+      "Bash(node --check web-service/static/scripts/dashboard.js)",
+      "Bash(curl -s http://localhost:5002/dashboard)",
+      "Bash(curl -s http://localhost:5002/static/scripts/dashboard.js)",
+      "Bash(curl -s http://localhost:5002/static/scripts/login.js)",
+      "Bash(curl -s http://localhost:5002/dashboard -o /tmp/dash.html -w \"HTTP %{http_code}, size %{size_download}\\\\n\")",
+      "Bash(grep -c \"^    background: #F4F6FA;$\" \"c:\\\\Users\\\\MARKSELLER\\\\geasto_empresa\\\\web-service\\\\static\\\\estilos\\\\dashboard.css\")",
+      "Bash(grep -c \"^    background: #F8FAFD;$\" \"c:\\\\Users\\\\MARKSELLER\\\\geasto_empresa\\\\web-service\\\\static\\\\estilos\\\\dashboard.css\")",
+      "Bash(grep -n \"^\\\\.env\\\\|/\\\\.env\" .gitignore)",
+      "Bash(docker volume *)",
+      "Bash(grep -oE '\\\\$\\\\{[A-Z_]+' \"c:\\\\Users\\\\MARKSELLER\\\\geasto_empresa\\\\docker-compose.yml\")",
+      "Bash(python -m py_compile app.py)"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+psycopg2-binary
+python-jose
+python-multipart
+pydantic
+minio
+python-dotenv
+httpx
+pytest==8.3.3

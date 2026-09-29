@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>(function(){try{var t=localStorage.getItem('mksTheme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+    <meta name="description" content="Preços MarkSuite — comece com 12.000 Kz/mês. Pague apenas pelos módulos que usa.">
+    <title>Preços — MarkSuite</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', path='estilos/precos.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', path='imagens/logo.png') }}" type="image/x-icon">
+
+</head>
+<body>
+
+    <header class="site-header" id="siteHeader">
+        <div class="container">
+            <nav class="navbar" aria-label="Navegação principal">
+
+                <a href="#" class="logo">
+                    <span class="logo-mark" aria-hidden="true">
+                        <svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#60A5FA"/>
+                                    <stop offset="100%" stop-color="#1D4ED8"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="28" height="28" rx="7" fill="url(#logoGrad)"/>
+                            <path d="M14 6.5 L15.3 12.7 L21.5 14 L15.3 15.3 L14 21.5 L12.7 15.3 L6.5 14 L12.7 12.7 Z" fill="white"/>
+                        </svg>
+                    </span>
+                    <span class="logo-text">MarkSuite</span>
+                </a>
+
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#modulos">Módulos</a></li>
+                    <li><a href="precos.html">Preços</a></li>
+                    <!-- <li><a href="#demo">Demo</a></li> -->
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+
+                <div class="nav-actions">
+                    <a href="login.html" class="link-quiet">Entrar</a>
+                    <a href="resistrar.html" class="btn btn-dark">Criar conta</a>
+                </div>
+
+                <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
+                    <span></span><span></span><span></span>
+                </button>
+
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="pricing" aria-labelledby="pricingTitle">
+            <div class="container">
+
+                <header class="pricing-header">
+                    <h1 class="pricing-title" id="pricingTitle" data-reveal>
+                        Preços simples. Valor enorme.
+                    </h1>
+                    <p class="pricing-sub" data-reveal style="--reveal-delay: 0.1s;">
+                        Pague apenas pelos módulos que usa. Comece pequeno, cresça à medida. Valores em Kz por mês.
+                    </p>
+                </header>
+
+                <div class="plans">
+<!-- 
+                    <article class="plan" data-reveal style="--reveal-delay: 0.15s;">
+                        <header class="plan-head">
+                            <h2 class="plan-name">Starter</h2>
+                            <p class="plan-tagline">Para equipas pequenas a começar.</p>
+                        </header>
+                        <div class="plan-price">
+                            <span class="price-amount">12.000</span>
+                            <span class="price-unit">Kz / mês</span>
+                        </div>
+                        <a href="#starter" class="btn btn-dark btn-block">Começar grátis</a>
+                        <ul class="plan-features">
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> CRM, Books e Desk</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Até 5 utilizadores</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Suporte por email</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Relatórios essenciais</li>
+                        </ul>
+                    </article> -->
+
+                    <article class="plan plan--featured" data-reveal style="--reveal-delay: 0.25s;">
+                        <span class="plan-badge">Mais escolhido</span>
+                        <span class="plan-aura" aria-hidden="true"></span>
+                        <header class="plan-head">
+                            <h2 class="plan-name">Business</h2>
+                            <p class="plan-tagline">Para empresas em crescimento.</p>
+                        </header>
+                        <div class="plan-price">
+                            <span class="price-amount">28.000</span>
+                            <span class="price-unit">Kz / mês</span>
+                        </div>
+                        <a href="#business" class="btn btn-light btn-block">Falar com vendas</a>
+                        <ul class="plan-features">
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> CRM — Gestão comercial</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Books — Contabilidade & Finanças</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Projects — Gestão de projectos</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> People — Recursos Humanos</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Kora AI — Inteligência artificial</li>
+
+                        </ul>
+                    </article>
+
+                    <!-- <article class="plan" data-reveal style="--reveal-delay: 0.35s;">
+                        <header class="plan-head">
+                            <h2 class="plan-name">Ultimate</h2>
+                            <p class="plan-tagline">Para grupos empresariais.</p>
+                        </header>
+                        <div class="plan-price plan-price--custom">
+                            <span class="price-amount price-amount--custom">Sob consulta</span>
+                        </div>
+                        <a href="#ultimate" class="btn btn-dark btn-block">Falar com vendas</a>
+                        <ul class="plan-features">
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> 50+ módulos sem limites</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Utilizadores ilimitados</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Kora AI completo</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> SLA dedicado</li>
+                            <li><svg class="check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg> Implementação assistida</li>
+                        </ul>
+                    </article> -->
+
+                </div>
+            </div>
+        </section>
+
+        
+<footer class="site-footer" aria-label="Rodapé">
+    <div class="container">
+
+        <div class="footer-top">
+
+            <div class="footer-brand" data-reveal>
+                <a href="#" class="logo">
+                    <span class="logo-mark" aria-hidden="true">
+                        <svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="footerLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#60A5FA"/>
+                                    <stop offset="100%" stop-color="#1D4ED8"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="28" height="28" rx="7" fill="url(#footerLogoGrad)"/>
+                            <path d="M14 6.5 L15.3 12.7 L21.5 14 L15.3 15.3 L14 21.5 L12.7 15.3 L6.5 14 L12.7 12.7 Z" fill="white"/>
+                        </svg>
+                    </span>
+                    <span class="logo-text">MarkSuite</span>
+                </a>
+                <p class="footer-blurb">
+                    O sistema operacional empresarial. Mais de 50 aplicações integradas para vendas, finanças, projectos, atendimento, RH e automação.
+                </p>
+            </div>
+
+            <nav class="footer-col" data-reveal style="--reveal-delay: 0.1s;" aria-labelledby="footProductTitle">
+                <h4 class="footer-title" id="footProductTitle">Produto</h4>
+                <ul class="footer-links">
+                    <li><a href="#modulos">Módulos</a></li>
+                    <li><a href="#precos">Preços</a></li>
+                    <!-- <li><a href="#demo">Demo ao vivo</a></li> -->
+                     
+                </ul>
+            </nav>
+
+            <nav class="footer-col" data-reveal style="--reveal-delay: 0.18s;" aria-labelledby="footCompanyTitle">
+                <h4 class="footer-title" id="footCompanyTitle">Empresa</h4>
+                <ul class="footer-links">
+                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a href="#parceiros">Parceiros</a></li>
+                    <li><a href="#seguranca">Segurança</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p class="footer-copy">© <span id="year">2026</span> MarkSuite. Todos os direitos reservados.</p>
+            <p class="footer-tagline">
+                Feito para empresas em Angola e <a href="#mundo" class="link-accent">no mundo</a>.
+            </p>
+        </div>
+
+    </div>
+</footer>
+    </main>
+
+    <script src="{{ url_for('static', path='scripts/precos.js') }}" defer></script>
+</body>
+</html>

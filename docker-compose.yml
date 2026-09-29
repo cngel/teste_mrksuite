@@ -1,0 +1,260 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-crm}
+      POSTGRES_USER: ${POSTGRES_USER:-crm_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ms_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-crm_user} -d ${POSTGRES_DB:-crm}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    ports:
+      - "127.0.0.1:9100:9000"
+      - "127.0.0.1:9101:9001"
+    networks:
+      - ms_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    networks:
+      - ms_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  modular-monolith:
+    build:
+      context: .
+      dockerfile: modular_monolith/Dockerfile
+    container_name: ms_app
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5002:5002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      ms_network:
+        aliases:
+          - web-service
+
+  # Serviços internos mapeados localmente para o Nginx via 127.0.0.1.
+  # Não são alcançáveis diretamente a partir do host externo (Internet).
+  auth-service:
+    build: ./auth-service
+    profiles: ["microservices"]
+    container_name: ms_auth
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5000:5000"
+    networks:
+      - ms_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  crm-service:
+    build: ./crm-service
+    profiles: ["microservices"]
+    container_name: ms_crm
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5001:5001"
+    networks:
+      - ms_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  rh-service:
+    build: ./rh-service
+    profiles: ["microservices"]
+    container_name: ms_rh
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5003:5003"
+    networks:
+      - ms_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+#  finance-service:
+#    build: ./finance-service
+#    container_name: ms_finance
+#    restart: unless-stopped
+#    env_file: .env
+#    ports:
+#      - "127.0.0.1:5004:5004"
+#    networks:
+#      - ms_network
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+
+#  projects-service:
+#    build: ./projects-service
+#    container_name: ms_projects
+#    restart: unless-stopped
+#    env_file: .env
+#    ports:
+#      - "127.0.0.1:5005:5005"
+#    networks:
+#      - ms_network
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      minio:
+#        condition: service_healthy
+
+  documents-service:
+    build: ./documents-service
+    profiles: ["microservices"]
+    container_name: ms_documents
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5006:5006"
+    networks:
+      - ms_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  accounting-service:
+    build: ./accounting-service
+    profiles: ["microservices"]
+    container_name: ms_accounting
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5009:5007"
+    networks:
+      - ms_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  stock-service:
+    build: ./stock-service
+    profiles: ["microservices"]
+    container_name: ms_stock
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5008:5008"
+    networks:
+      - ms_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+  web-service:
+    build: ./web-service
+    profiles: ["microservices"]
+    container_name: ms_web
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:5002:5002"
+    networks:
+      - ms_network
+    depends_on:
+      - auth-service
+      - crm-service
+      - rh-service
+      #- finance-service
+      #- projects-service
+      - documents-service
+      - accounting-service
+      - stock-service
+
+#  erp-agent:
+#    build: ./erp-agent
+#    container_name: ms_kora
+#    restart: unless-stopped
+#    env_file: .env
+#    environment:
+#      WEB_SERVICE_URL: http://web-service:5002
+#      TASKS_DB_PATH: /app/data/tasks.db
+#    volumes:
+#      - kora_data:/app/data
+#    ports:
+#      - "127.0.0.1:8010:8010"
+#    networks:
+#      - ms_network
+#    depends_on:
+#      - web-service
+
+#  whatsapp-service:
+#    build: ./whatsapp-service
+#    container_name: ms_whatsapp
+#    restart: unless-stopped
+#    env_file: .env
+#    ports:
+#      - "127.0.0.1:5007:5007"
+#    networks:
+#      - ms_network
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      minio:
+#        condition: service_healthy
+
+volumes:
+  postgres_data:
+  minio_data:
+  kora_data:
+
+networks:
+  ms_network:
+    driver: bridge
