@@ -1,6 +1,0 @@
-fastapi[standard]==0.111.0
-psycopg2-binary==2.9.12
-minio==7.2.20
-pydantic
-typing
-datetime

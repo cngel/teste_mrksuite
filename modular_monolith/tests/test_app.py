@@ -1,9 +1,5 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import hashlib
-import hmac
-import json
-import os
 import sys
 
 from modular_monolith.app import app, module_apps
@@ -14,51 +10,6 @@ def test_health_reports_loaded_domains():
 
     assert response.status_code == 200
     assert response.json()["modules"] == ["accounting", "auth", "crm", "documents", "rh", "stock"]
-
-
-def test_whatsapp_webhook_verification():
-    os.environ["WHATSAPP_VERIFY_TOKEN"] = "verify-test"
-    response = TestClient(app).get("/webhook/whatsapp", params={
-        "hub.mode": "subscribe",
-        "hub.verify_token": "verify-test",
-        "hub.challenge": "challenge-test",
-    })
-
-    assert response.status_code == 200
-    assert response.text == "challenge-test"
-
-
-def test_whatsapp_webhook_rejects_unsigned_events():
-    os.environ["WHATSAPP_APP_SECRET"] = "app-secret-test"
-    response = TestClient(app).post("/webhook/whatsapp", json={})
-
-    assert response.status_code == 401
-
-
-def test_whatsapp_webhook_accepts_signed_event(monkeypatch):
-    secret = "app-secret-test"
-    monkeypatch.setenv("WHATSAPP_APP_SECRET", secret)
-    received = []
-    monkeypatch.setattr(
-        "modular_monolith.app._process_whatsapp_message",
-        lambda *args: received.append(args),
-    )
-    payload = {
-        "entry": [{"changes": [{"value": {
-            "messages": [{"type": "text", "from": "244923456789", "text": {"body": "/crm"}}],
-            "contacts": [{"profile": {"name": "Carlos"}}],
-        }}]}]
-    }
-    body = json.dumps(payload, separators=(",", ":")).encode()
-    signature = "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
-    response = TestClient(app).post(
-        "/webhook/whatsapp",
-        content=body,
-        headers={"content-type": "application/json", "x-hub-signature-256": signature},
-    )
-
-    assert response.status_code == 200
-    assert received == [("244923456789", "/crm", "Carlos")]
 
 
 def test_proxy_dispatches_to_module_in_process():

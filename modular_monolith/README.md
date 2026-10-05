@@ -14,7 +14,7 @@ A aplicação fica em `http://localhost:5002`; `GET /health` informa os módulos
 
 ## Escopo atual
 
-Foram agregados os seis serviços que estavam ativos no Compose: Auth, CRM, RH, Documents, Accounting e Stock. Finance e Projects tinham as rotas desativadas; ERP Agent e WhatsApp também não faziam parte do stack ativo e permanecem fora desta primeira migração.
+Foram agregados os seis serviços que estavam ativos no Compose: Auth, CRM, RH, Documents, Accounting e Stock. Finance e Projects tinham as rotas desativadas; o ERP Agent permanece fora desta primeira migração.
 
 ## Testes
 

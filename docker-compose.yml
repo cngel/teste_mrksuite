@@ -237,21 +237,6 @@ services:
 #    depends_on:
 #      - web-service
 
-#  whatsapp-service:
-#    build: ./whatsapp-service
-#    container_name: ms_whatsapp
-#    restart: unless-stopped
-#    env_file: .env
-#    ports:
-#      - "127.0.0.1:5007:5007"
-#    networks:
-#      - ms_network
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#      minio:
-#        condition: service_healthy
-
 volumes:
   postgres_data:
   minio_data:
